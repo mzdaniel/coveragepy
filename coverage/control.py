@@ -236,10 +236,12 @@ class Coverage(object):
         self.omit = prep_patterns(self.config.omit)
         self.include = prep_patterns(self.config.include)
 
-        concurrency = self.config.concurrency
-        if concurrency == "multiprocessing":
+        string_types = str if sys.version_info[0] == 3 else basestring
+        concurrency = self.config.concurrency.split(',') if (
+            isinstance(self.config.concurrency, string_types)) else []
+        if "multiprocessing" in concurrency:
             patch_multiprocessing()
-            concurrency = None
+            concurrency.remove("multiprocessing")
 
         self.collector = Collector(
             should_trace=self._should_trace,

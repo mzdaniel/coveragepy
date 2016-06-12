@@ -101,16 +101,18 @@ class Collector(object):
         self.concur_id_func = None
 
         try:
-            if concurrency == "greenlet":
+            if len(concurrency) > 1:
+                raise CoverageException("Can only specify one of %s" % ", ".join(concurrency))
+            elif "greenlet" in concurrency:
                 import greenlet
                 self.concur_id_func = greenlet.getcurrent
-            elif concurrency == "eventlet":
+            elif "eventlet" in concurrency:
                 import eventlet.greenthread     # pylint: disable=import-error,useless-suppression
                 self.concur_id_func = eventlet.greenthread.getcurrent
-            elif concurrency == "gevent":
+            elif "gevent" in concurrency:
                 import gevent                   # pylint: disable=import-error,useless-suppression
                 self.concur_id_func = gevent.getcurrent
-            elif concurrency == "thread" or not concurrency:
+            elif "thread" in concurrency or not concurrency:
                 # It's important to import threading only if we need it.  If
                 # it's imported early, and the program being measured uses
                 # gevent, then gevent's monkey-patching won't work properly.

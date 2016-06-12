@@ -32,7 +32,7 @@ class Opts(object):
         "thread", "gevent", "greenlet", "eventlet", "multiprocessing",
     ]
     concurrency = optparse.make_option(
-        '', '--concurrency', action='store', metavar="LIB",
+        '', '--concurrency', action='append', metavar="LIB",
         choices=CONCURRENCY_CHOICES,
         help=(
             "Properly measure code using a concurrency library. "
